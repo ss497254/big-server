@@ -1,5 +1,5 @@
 {
-  "name": "big-server",
+  "name": "big_server",
   "version": "1.0.0",
   "description": "Server to handle all my needs",
   "main": "index.js",
