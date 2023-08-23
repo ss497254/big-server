@@ -18,9 +18,7 @@ export async function createServer(): Promise<http.Server> {
   createWebSocketController(server);
   startWebSocketHandlers();
 
-  const serverShutdownTimeout = getEnvConfig(
-    "SERVER_SHUTDOWN_TIMEOUT"
-  ) as number;
+  const serverShutdownTimeout = getEnvConfig("SERVER_SHUTDOWN_TIMEOUT");
 
   const terminusOptions: TerminusOptions = {
     timeout:
@@ -46,23 +44,23 @@ export async function createServer(): Promise<http.Server> {
   async function onSignal() {
     getWebSocketController()?.terminate();
 
-    logger.info("Terminated ws connentions");
+    logger.info("Terminated websocket connections");
   }
 
   async function onShutdown() {
-    logger.info("big_server is shutting down, OK. Bye bye!");
+    logger.info("BigServer is shutting down, OK. Bye bye!");
   }
 }
 
 export async function startServer(): Promise<void> {
   const server = await createServer();
 
-  const host = getEnvConfig("HOST") as string;
-  const port = getEnvConfig("PORT") as number;
+  const host = getEnvConfig("HOST");
+  const port = getEnvConfig("PORT");
 
   server
     .listen(port, host, () => {
-      logger.info(`big_server started at http://${host}:${port}`);
+      logger.info(`BigServer started at http://${host}:${port}`);
     })
     .once("error", (err: any) => {
       if (err?.code === "EADDRINUSE") {
