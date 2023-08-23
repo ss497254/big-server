@@ -3,6 +3,7 @@ require("esbuild")
     entryPoints: ["src/index.ts"],
     minify: true,
     format: "cjs",
+    bundle: true,
     platform: "node",
     outdir: "dist",
     color: true,
