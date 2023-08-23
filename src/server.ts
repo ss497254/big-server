@@ -3,22 +3,18 @@ import { createTerminus } from "@godaddy/terminus";
 import * as http from "http";
 import { getEnvConfig } from "src/config";
 import logger from "src/lib/logger";
-import createApp from "./app.js";
-import getDatabase from "./database/index.js";
+import createApp from "src/app";
 import {
-  createSubscriptionController,
   createWebSocketController,
-  getSubscriptionController,
   getWebSocketController,
-} from "./websocket/controllers/index.js";
-import { startWebSocketHandlers } from "./websocket/handlers/index.js";
+} from "src/websocket/controllers";
+import { startWebSocketHandlers } from "src/websocket/handlers";
 
 export let SERVER_ONLINE = true;
 
 export async function createServer(): Promise<http.Server> {
   const server = http.createServer(await createApp());
 
-  createSubscriptionController(server);
   createWebSocketController(server);
   startWebSocketHandlers();
 
@@ -48,12 +44,9 @@ export async function createServer(): Promise<http.Server> {
   }
 
   async function onSignal() {
-    getSubscriptionController()?.terminate();
     getWebSocketController()?.terminate();
-    const database = getDatabase();
-    await database.destroy();
 
-    logger.info("Database connections destroyed");
+    logger.info("Terminated ws connentions");
   }
 
   async function onShutdown() {
