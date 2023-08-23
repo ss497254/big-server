@@ -30,7 +30,10 @@ export type EnvKeysType =
   | "CORS_EXPOSED_HEADERS"
   | "CORS_CREDENTIALS"
   | "CORS_MAX_AGE"
-  | "SERVER_SHUTDOWN_TIMEOUT";
+  | "WEBSOCKETS_ENABLED"
+  | "SERVER_SHUTDOWN_TIMEOUT"
+  | "IP_TRUST_PROXY"
+  | "MAX_REQ_PAYLOAD_SIZE";
 
 const env: Record<EnvKeysType, IEnvVariable> = {
   NODE_ENV: {
@@ -59,8 +62,8 @@ const env: Record<EnvKeysType, IEnvVariable> = {
     setBy: "default",
   },
   CORS_ENABLED: {
-    value: undefined,
-    type: "string",
+    value: false,
+    type: "boolean",
     setBy: "default",
   },
   CORS_ORIGIN: {
@@ -95,6 +98,21 @@ const env: Record<EnvKeysType, IEnvVariable> = {
   },
   SERVER_SHUTDOWN_TIMEOUT: {
     value: 10,
+    type: "number",
+    setBy: "default",
+  },
+  WEBSOCKETS_ENABLED: {
+    value: true,
+    type: "boolean",
+    setBy: "default",
+  },
+  IP_TRUST_PROXY: {
+    value: 0,
+    type: "number",
+    setBy: "default",
+  },
+  MAX_REQ_PAYLOAD_SIZE: {
+    value: 1000 * 100,
     type: "number",
     setBy: "default",
   },
