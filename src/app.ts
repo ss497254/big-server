@@ -1,14 +1,13 @@
 import cookieParser from "cookie-parser";
 import express from "express";
-import notFoundHandler from "./controllers/not-found";
-
-import { InvalidPayloadError } from "./errors/index";
+import notFoundHandler from "src/controllers/not-found";
+import { InvalidPayloadError } from "src/errors";
 import { expressLogger } from "src/lib/logger";
-import cors from "./middleware/cors";
-import errorHandler from "./middleware/error-handler";
+import cors from "src/middleware/cors";
+import errorHandler from "src/middleware/error-handler";
 import extractToken from "src/middleware/extract-token";
 // import rateLimiterGlobal from "src/middleware/rate-limiter-global";
-import { getEnvConfig } from "src/config/index";
+import { getEnvConfig } from "src/config";
 
 export default async function createApp(): Promise<express.Application> {
   const app = express();
@@ -19,7 +18,7 @@ export default async function createApp(): Promise<express.Application> {
   app.use(expressLogger);
 
   app.use((_req, res, next) => {
-    res.setHeader("X-Powered-By", "big_server");
+    res.setHeader("X-Powered-By", "BigServer");
     next();
   });
 
@@ -27,9 +26,9 @@ export default async function createApp(): Promise<express.Application> {
     app.use(cors);
   }
 
-  // if (getEnvConfig("RATE_LIMITER_GLOBAL_ENABLED")) {
-  //   app.use(rateLimiterGlobal);
-  // }
+  if (getEnvConfig("RATE_LIMITER_GLOBAL_ENABLED")) {
+    //   app.use(rateLimiterGlobal);
+  }
 
   app.use((req, res, next) => {
     express.json({
@@ -49,7 +48,7 @@ export default async function createApp(): Promise<express.Application> {
 
   app.get("/", (_req, res) => {
     res.json({
-      message: "Hi, I'm big_server",
+      message: "Hi, I'm BigServer",
     });
   });
 
