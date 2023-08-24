@@ -14,6 +14,7 @@ export interface IEnvVariable<T = EnvVariablesType> {
   value: T | undefined;
   type: (typeof acceptedEnvTypes)[number];
   setBy: "default" | "env" | "config-file" | "custom";
+  required?: boolean;
   deleteFromProcess?: boolean;
 }
 
@@ -49,7 +50,7 @@ const env = {
   } as IEnvVariable<string>,
 
   CONFIG_PATH: {
-    value: undefined,
+    value: "config.json",
     type: "string",
     setBy: "default",
   } as IEnvVariable<string>,
@@ -143,6 +144,30 @@ const env = {
     type: "number",
     setBy: "default",
   } as IEnvVariable<number>,
+
+  FIREBASE_CLIENT_EMAIL: {
+    value: undefined,
+    type: "string",
+    setBy: "default",
+    required: true,
+    deleteFromProcess: true,
+  } as IEnvVariable<string>,
+
+  FIREBASE_PROJECT_ID: {
+    value: undefined,
+    type: "string",
+    setBy: "default",
+    required: true,
+    deleteFromProcess: true,
+  } as IEnvVariable<string>,
+
+  FIREBASE_PRIVATE_KEY: {
+    value: undefined,
+    type: "string",
+    setBy: "default",
+    required: true,
+    deleteFromProcess: true,
+  } as IEnvVariable<string>,
 } as const;
 
 export type EnvKeysType = keyof typeof env;
@@ -174,11 +199,16 @@ export function setupConfig() {
       // for security reasons
       if (env[key].deleteFromProcess) delete process.env[key];
     } else if (config[key]) parseEnv(key, config[key], "config-file");
+    else if (env[key].required) {
+      throw new Error(`env variable ${key} is required`);
+    }
   }
 }
 
 function loadConfiguration() {
-  const configPath = path.resolve(process.env["CONFIG_PATH"]!);
+  const configPath = path.resolve(
+    process.env["CONFIG_PATH"] || env["CONFIG_PATH"].value!
+  );
 
   if (fs.existsSync(configPath) === false) return {};
 
