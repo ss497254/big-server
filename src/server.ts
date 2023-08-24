@@ -1,15 +1,15 @@
 import type { TerminusOptions } from "@godaddy/terminus";
 import { createTerminus } from "@godaddy/terminus";
 import * as http from "http";
-import { getEnvConfig, setupConfig } from "src/config";
-import logger from "src/lib/logger";
 import createApp from "src/app";
+import { getEnvConfig } from "src/config";
+import { CheckFirebase, InitializeFirebase } from "src/firebase/setup";
+import logger from "src/lib/logger";
 import {
   createWebSocketController,
   getWebSocketController,
 } from "src/websocket/controllers";
 import { startWebSocketHandlers } from "src/websocket/handlers";
-import { InitializeFirebase, CheckFirebase } from "./firebase/setup";
 
 export let SERVER_ONLINE = true;
 
@@ -55,10 +55,10 @@ export async function createServer(): Promise<http.Server> {
 }
 
 export async function startServer(): Promise<void> {
+  const server = await createServer();
   const host = getEnvConfig("HOST");
   const port = getEnvConfig("PORT");
 
-  const server = await createServer();
   await CheckFirebase();
 
   server
