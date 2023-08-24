@@ -1,6 +1,6 @@
 import { isBigServerError } from "src/errors";
 import type { ErrorRequestHandler } from "express";
-import { ErrorCode, MethodNotAllowedError } from "../errors/index";
+import { ErrorCode, MethodNotAllowedError } from "src/errors";
 import logger from "src/lib/logger";
 
 const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
