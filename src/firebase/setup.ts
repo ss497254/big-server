@@ -1,6 +1,7 @@
 import { App, cert, getApps, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import logger from "src/lib/logger";
+import { setFirebaseEntities } from ".";
 import { getEnvConfig } from "../config";
 
 export let FirebaseInstance: App;
@@ -20,12 +21,13 @@ export const InitializeFirebase = async () => {
               .join("\n"),
           }),
         },
-        "innov8"
+        "BigServer"
       )
     );
   }
 
   FirebaseInstance = apps[0];
+  setFirebaseEntities(FirebaseInstance);
 };
 
 export const CheckFirebase = async () => {

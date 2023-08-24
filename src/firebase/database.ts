@@ -1,5 +1,5 @@
 import { FieldPath, WhereFilterOp } from "firebase-admin/firestore";
-import { firestore } from "./firestore";
+import { firestore } from ".";
 
 // Collection operations
 export const getCollections = async () => {
