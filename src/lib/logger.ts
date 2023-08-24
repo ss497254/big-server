@@ -1,19 +1,34 @@
+import winston from "winston";
 import { NextFunction, Request, Response } from "express";
 
-const logger = {
-  warn: console.warn,
-  info: console.info,
-  error: console.error,
-  trace: console.trace,
-  debug: console.debug,
-};
+const logFormat = winston.format.printf(function (info) {
+  return `${info.level}: ${info.message}`;
+});
+
+class Logger {
+  logger: winston.Logger;
+
+  constructor() {
+    let transports = [
+      new winston.transports.Console({
+        format: winston.format.combine(winston.format.colorize(), logFormat),
+      }),
+    ];
+
+    this.logger = winston.createLogger({
+      transports,
+    });
+  }
+}
+
+const { logger } = new Logger();
 
 export const expressLogger = (
   req: Request,
   _res: Response,
   next: NextFunction
 ) => {
-  console.log(`Req: ${req.hostname} ${req.path} ${req.ip}`);
+  logger.info(`Req: ${req.hostname} ${req.path} ${req.ip}`);
   next();
 };
 
