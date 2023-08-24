@@ -3,12 +3,15 @@ import type { NextFunction, Request, Response } from "express";
 import asyncHandler from "src/utils/async-handler";
 import { getAccountabilityForToken } from "src/utils/get-accountability-for-token";
 import { getIPFromReq } from "src/utils/get-ip-from-req";
+import { UnauthorizedError } from "src/errors";
 
 export const handler = async (
   req: Request,
   _res: Response,
   next: NextFunction
 ) => {
+  if (!req.token) throw new UnauthorizedError();
+
   const defaultAccountability: Partial<Accountability> = {
     admin: false,
     app: false,
