@@ -2,5 +2,5 @@
   "verbose": true,
   "ignore": ["dist/**/*.*"],
   "ext": "ts",
-  "exec": "esbuild src/index.ts --platform=node --format=cjs --outdir=dist  && node ./dist/index.js"
+  "exec": "esbuild src/index.ts --platform=node --bundle --format=cjs --outdir=dist  && node ./dist/index.js"
 }
