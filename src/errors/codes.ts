@@ -20,6 +20,7 @@ export enum ErrorCode {
   RouteNotFound = "ROUTE_NOT_FOUND",
   ServiceUnavailable = "SERVICE_UNAVAILABLE",
   TokenExpired = "TOKEN_EXPIRED",
+  Unauthorized = "UNAUTHORIZED",
   UnexpectedResponse = "UNEXPECTED_RESPONSE",
   UnprocessableContent = "UNPROCESSABLE_CONTENT",
   UnsupportedMediaType = "UNSUPPORTED_MEDIA_TYPE",
