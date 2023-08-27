@@ -1,12 +1,12 @@
 import { Router } from "express";
-import admin from "./admin.route";
+import user from "./user.route";
 
 export interface IApiRoute {
   path: string;
   router: Router;
 }
 
-const API_ROUTES: IApiRoute[] = [{ path: "/admin", router: admin }];
+const API_ROUTES: IApiRoute[] = [{ path: "/user", router: user }];
 
 const router = Router();
 

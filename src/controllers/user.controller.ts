@@ -1,27 +1,23 @@
 import { Response } from "express";
 import { InvalidCredentialsError } from "src/errors";
 import { z } from "zod";
-import { adminService } from "src/services";
+import { userService } from "src/services";
 import { createAccessToken } from "src/utils/create-access-token";
-import { adminAuthValidations } from "src/validations";
+import { userAuthValidations } from "src/validations";
 
-export const adminLogin = async (
-  data: z.infer<typeof adminAuthValidations.adminLogin>,
+export const userLogin = async (
+  data: z.infer<typeof userAuthValidations.userLogin>,
   res: Response
 ) => {
   const { username, password } = data.body;
 
   try {
-    const user = await adminService.verifyAdminByUsernameAndPassword(
+    const user = await userService.verifyUserByUsernameAndPassword(
       username,
       password
     );
 
-    const token = createAccessToken({
-      user,
-      role: "admin",
-      admin: true,
-    });
+    const token = createAccessToken(user);
 
     res.send({
       success: true,

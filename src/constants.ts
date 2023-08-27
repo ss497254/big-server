@@ -1,4 +1,4 @@
-export const AdminsTable = "admins";
+export const UsersTable = "users";
 
 export const httpStatus = {
   ACCEPTED: 202,
