@@ -2,77 +2,68 @@ import { isBigServerError } from "src/errors";
 import type { ErrorRequestHandler } from "express";
 import { ErrorCode, MethodNotAllowedError } from "src/errors";
 import logger from "src/lib/logger";
+import { __prod__ } from "src/config";
 
 const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
-  let payload: any = {
-    errors: [],
+  let payload = {
+    success: false,
+    status: 500,
+    message: "INTERNAL_SERVER_ERROR",
   };
 
-  const errors = [err];
+  let errors = [];
 
-  let status: number | null = null;
+  if (!__prod__) {
+    err.extensions = {
+      ...(err.extensions || {}),
+      stack: err.stack,
+    };
+  }
 
-  for (const err of errors) {
-    if (isBigServerError(err)) {
-      logger.debug(err);
+  if (isBigServerError(err)) {
+    logger.debug(err.code, err.message);
 
-      if (!status) {
-        status = err.status;
-      } else if (status !== err.status) {
-        status = 500;
-      }
+    payload.status = err.status;
+    payload.message = err.message;
+    errors.push(err);
 
-      payload.errors.push({
-        message: err.message,
-        extensions: {
-          code: err.code,
-          ...(err.extensions ?? {}),
+    if (isBigServerError(err, ErrorCode.MethodNotAllowed)) {
+      res.header(
+        "Allow",
+        (
+          err as InstanceType<typeof MethodNotAllowedError>
+        ).extensions.allowed.join(", ")
+      );
+    }
+  } else {
+    logger.error(err);
+
+    errors = [err];
+    if (req.accountability?.admin === true) {
+      errors = [
+        {
+          message: err.message,
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            ...err.extensions,
+          },
         },
-      });
-
-      if (isBigServerError(err, ErrorCode.MethodNotAllowed)) {
-        res.header(
-          "Allow",
-          (
-            err as InstanceType<typeof MethodNotAllowedError>
-          ).extensions.allowed.join(", ")
-        );
-      }
+      ];
     } else {
-      logger.error(err);
-
-      status = 500;
-
-      if (req.accountability?.admin === true) {
-        payload = {
-          errors: [
-            {
-              message: err.message,
-              extensions: {
-                code: "INTERNAL_SERVER_ERROR",
-                ...err.extensions,
-              },
-            },
-          ],
-        };
-      } else {
-        payload = {
-          errors: [
-            {
-              message: "An unexpected error occurred.",
-              extensions: {
-                code: "INTERNAL_SERVER_ERROR",
-              },
-            },
-          ],
-        };
-      }
+      errors = [
+        {
+          message: "An unexpected error occurred.",
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+          },
+        },
+      ];
     }
   }
 
-  res.status(status ?? 500);
+  res.status(payload.status);
 
-  return res.json({ ...payload });
+  return res.json({ ...payload, errors });
 };
 
 export default errorHandler;
