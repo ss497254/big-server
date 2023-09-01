@@ -10,6 +10,8 @@ const acceptedEnvTypes = [
   "json",
 ] as const;
 
+export const __prod__ = process.env.NODE_ENV === "production";
+
 export interface IEnvVariable<T = EnvVariablesType> {
   value: T | undefined;
   type: (typeof acceptedEnvTypes)[number];
@@ -19,12 +21,6 @@ export interface IEnvVariable<T = EnvVariablesType> {
 }
 
 const env = {
-  NODE_ENV: {
-    value: "development",
-    type: "string",
-    setBy: "default",
-  } as IEnvVariable<string>,
-
   HOST: {
     value: "localhost",
     type: "string",
