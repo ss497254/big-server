@@ -3,8 +3,8 @@ import { Accountability } from "src/types";
 import { getEnvConfig } from "src/config";
 
 export const createAccessToken = (data: Accountability) => {
-  return sign(data, getEnvConfig("JWT_SECRET"), {
-    expiresIn: 60 * 24,
+  return sign(data, getEnvConfig<string>("JWT_SECRET"), {
+    expiresIn: getEnvConfig("JWT_TOKEN_EXPIRY"),
     algorithm: "HS256",
   });
 };
