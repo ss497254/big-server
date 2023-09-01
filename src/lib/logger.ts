@@ -1,7 +1,10 @@
-import winston from "winston";
 import { NextFunction, Request, Response } from "express";
+import winston from "winston";
 
 const logFormat = winston.format.printf(function (info) {
+  if (typeof info.message == "object")
+    return `${info.level}: ${JSON.stringify(info.message)}`;
+
   return `${info.level}: ${info.message}`;
 });
 
@@ -16,6 +19,15 @@ class Logger {
     ];
 
     this.logger = winston.createLogger({
+      level: "debug",
+      levels: {
+        error: 0,
+        warn: 1,
+        info: 2,
+        http: 3,
+        verbose: 4,
+        debug: 5,
+      },
       transports,
     });
   }
@@ -28,7 +40,7 @@ export const expressLogger = (
   _res: Response,
   next: NextFunction
 ) => {
-  logger.info(`Req: ${req.hostname} ${req.path} ${req.ip}`);
+  logger.http(`Request: ${req.method} ${req.hostname} ${req.path} ${req.ip}`);
   next();
 };
 
