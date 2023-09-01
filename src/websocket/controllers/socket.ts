@@ -1,5 +1,4 @@
 import type { IncomingMessage, Server as httpServer } from "http";
-import { nanoid } from "nanoid";
 import { getEnv, getEnvConfig } from "src/config";
 import logger from "src/lib/logger";
 import type internal from "stream";
@@ -131,33 +130,33 @@ export default abstract class SocketController {
       }
 
       // this log cannot be higher in the function or it will leak credentials
-      logger.trace(`WebSocket#${client.user} - ${JSON.stringify(message)}`);
+      logger.info(`WebSocket#${client.username} - ${JSON.stringify(message)}`);
       ws.emit("parsed-message", message);
     });
 
     ws.on("error", () => {
-      logger.debug(`WebSocket#${client.user} connection errored`);
+      logger.debug(`WebSocket#${client.username} connection errored`);
 
-      this.clients.delete(client.user);
+      this.clients.delete(client.username);
     });
 
     ws.on("close", () => {
-      logger.debug(`WebSocket#${client.user} connection closed`);
+      logger.debug(`WebSocket#${client.username} connection closed`);
 
-      this.clients.delete(client.user);
+      this.clients.delete(client.username);
     });
 
-    logger.debug(`WebSocket#${client.user} connected`);
+    logger.debug(`WebSocket#${client.username} connected`);
 
     if (accountability) {
-      logger.trace(
-        `WebSocket#${client.user} authenticated as ${JSON.stringify(
+      logger.info(
+        `WebSocket#${client.username} authenticated as ${JSON.stringify(
           accountability
         )}`
       );
     }
 
-    this.clients.set(client.user, client);
+    this.clients.set(client.username, client);
     return client;
   }
 
@@ -185,16 +184,16 @@ export default abstract class SocketController {
       const { accountability } = await authenticateConnection(message);
 
       client.accountability = accountability;
-      client.user = accountability.user;
+      client.username = accountability.username;
       client.send(authenticationSuccess(message.uid));
 
       logger.info(
-        `WebSocket#${client.user} authenticated as ${JSON.stringify(
+        `WebSocket#${client.username} authenticated as ${JSON.stringify(
           client.accountability
         )}`
       );
     } catch (error) {
-      logger.trace(`WebSocket#${client.user} failed authentication`);
+      logger.info(`WebSocket#${client.username} failed authentication`);
 
       client.accountability = null;
 

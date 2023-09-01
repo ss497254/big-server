@@ -9,7 +9,7 @@ export type AuthenticationState = {
 
 export type WebSocketClient = WebSocket &
   AuthenticationState & {
-    user: string;
+    username: string;
   };
 export type UpgradeRequest = IncomingMessage & AuthenticationState;
 

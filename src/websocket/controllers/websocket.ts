@@ -27,13 +27,13 @@ export class WebSocketController extends SocketController {
 
     client.on("error", (event: WebSocket.Event) => {
       logger.warn(
-        `websocket.close: ${client.user} ${event.type} ${event.target}`
+        `websocket.close: ${client.username} ${event.type} ${event.target}`
       );
     });
 
     client.on("close", (event: WebSocket.CloseEvent) => {
       logger.warn(
-        `websocket.close: ${client.user} ${event.code} ${event.reason}`
+        `websocket.close: ${client.username} ${event.code} ${event.reason}`
       );
     });
   }
