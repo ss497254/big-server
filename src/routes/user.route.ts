@@ -5,8 +5,14 @@ import { userAuthValidations } from "src/validations";
 
 const router = express.Router();
 
-router
-  .route("/login")
-  .post([validate(userAuthValidations.userLogin), userController.userLogin]);
+router.post("/login", [
+  validate(userAuthValidations.userLogin),
+  userController.userLogin,
+]);
+
+router.post("/register", [
+  validate(userAuthValidations.userRegister),
+  userController.userRegister,
+]);
 
 export default router;
