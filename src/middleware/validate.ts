@@ -1,13 +1,13 @@
-import { Request, Response } from "express";
-import { AnyZodObject, ZodError } from "zod";
+import { NextFunction, Response } from "express";
 import { InvalidPayloadError } from "src/errors";
+import { AnyZodObject, ZodError } from "zod";
 
 const validate =
-  (schema: AnyZodObject, cb: (x: any, res: Response) => void) =>
-  (req: Request, res: Response) => {
+  (schema: AnyZodObject) => (req: any, _res: Response, next: NextFunction) => {
     try {
-      const data = schema.parse(req);
-      cb(data, res);
+      req = schema.parse(req);
+
+      next();
     } catch (err) {
       let reason = "validation error";
 
