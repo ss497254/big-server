@@ -7,6 +7,6 @@ const router = express.Router();
 
 router
   .route("/login")
-  .post(validate(userAuthValidations.userLogin, userController.userLogin));
+  .post([validate(userAuthValidations.userLogin), userController.userLogin]);
 
 export default router;

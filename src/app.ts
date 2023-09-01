@@ -6,7 +6,7 @@ import { expressLogger } from "src/lib/logger";
 import cors from "src/middleware/cors";
 import errorHandler from "src/middleware/error-handler";
 import extractToken from "src/middleware/extract-token";
-import apiRoutes from "src/routes";
+import { setupApiRoutes } from "src/routes";
 
 export default async function createApp(): Promise<express.Application> {
   const app = express();
@@ -47,7 +47,7 @@ export default async function createApp(): Promise<express.Application> {
 
   app.get("/server/ping", (_req, res) => res.send("pong"));
 
-  app.use("/api", apiRoutes);
+  setupApiRoutes(app);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

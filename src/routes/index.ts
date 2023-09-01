@@ -8,10 +8,8 @@ export interface IApiRoute {
 
 const API_ROUTES: IApiRoute[] = [{ path: "/user", router: user }];
 
-const router = Router();
-
-API_ROUTES.forEach((route) => {
-  router.use(route.path, route.router);
-});
-
-export default Router;
+export const setupApiRoutes = (router: Router) => {
+  API_ROUTES.forEach((route) => {
+    router.use("/api" + route.path, route.router);
+  });
+};
