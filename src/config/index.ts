@@ -40,7 +40,14 @@ const env = {
   } as IEnvVariable<string>,
 
   JWT_SECRET: {
-    value: "pA@#$RSdDF#%asgfda87",
+    value: "",
+    type: "string",
+    setBy: "default",
+    required: true,
+  } as IEnvVariable<string>,
+
+  USER_REGISTER_SECRET: {
+    value: "",
     type: "string",
     setBy: "default",
   } as IEnvVariable<string>,
