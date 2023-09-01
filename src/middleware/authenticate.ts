@@ -14,7 +14,7 @@ export const handler = async (
 
   const defaultAccountability: Partial<Accountability> = {
     admin: false,
-    app: false,
+    permissions: [],
     ip: getIPFromReq(req),
   };
 

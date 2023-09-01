@@ -1,8 +1,8 @@
 export type Accountability = {
   role: string;
-  user: string;
+  username: string;
   admin?: boolean;
-  app?: boolean;
+  permissions: string[];
   ip?: string;
   userAgent?: string;
   origin?: string;
