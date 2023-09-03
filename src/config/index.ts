@@ -28,9 +28,9 @@ const env = {
   } as IEnvVariable<string>,
 
   PORT: {
-    value: "8080",
+    value: 8080,
     type: "number",
-  } as IEnvVariable<string>,
+  } as IEnvVariable<number>,
 
   PUBLIC_URL: {
     value: undefined,
