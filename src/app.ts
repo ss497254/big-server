@@ -8,8 +8,10 @@ import errorHandler from "src/middleware/error-handler";
 import extractToken from "src/middleware/extract-token";
 import { setupApiRoutes } from "src/routes";
 
-export default async function createApp(): Promise<express.Application> {
+export default async function createApp() {
   const app = express();
+
+  return app;
 
   app.disable("x-powered-by");
   app.set("trust proxy", getEnvConfig("IP_TRUST_PROXY") as number);
