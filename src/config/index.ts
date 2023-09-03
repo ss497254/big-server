@@ -23,7 +23,7 @@ export interface IEnvVariable<T = EnvVariablesType> {
 const env = {
   // Server config variables
   HOST: {
-    value: "localhost",
+    value: "127.0.0.1",
     type: "string",
   } as IEnvVariable<string>,
 

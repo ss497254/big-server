@@ -59,10 +59,10 @@ export async function startServer(): Promise<void> {
   const host = getEnvConfig("HOST");
   const port = getEnvConfig("PORT");
 
-  // await CheckFirebase();
+  await CheckFirebase();
 
   server
-    .listen(port, () => {
+    .listen({ port, host }, () => {
       logger.info(`BigServer started at http://${host}:${port}`);
     })
     .once("error", (err: any) => {
