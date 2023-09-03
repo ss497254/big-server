@@ -16,9 +16,9 @@ export let SERVER_ONLINE = true;
 export async function createServer(): Promise<http.Server> {
   const server = http.createServer(await createApp());
 
-  await InitializeFirebase();
-  createWebSocketController(server);
-  startWebSocketHandlers();
+  // await InitializeFirebase();
+  // createWebSocketController(server);
+  // startWebSocketHandlers();
 
   const serverShutdownTimeout = getEnvConfig("SERVER_SHUTDOWN_TIMEOUT");
 
