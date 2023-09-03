@@ -16,9 +16,9 @@ export let SERVER_ONLINE = true;
 export async function createServer(): Promise<http.Server> {
   const server = http.createServer(await createApp());
 
-  // await InitializeFirebase();
-  // createWebSocketController(server);
-  // startWebSocketHandlers();
+  await InitializeFirebase();
+  createWebSocketController(server);
+  startWebSocketHandlers();
 
   const serverShutdownTimeout = getEnvConfig("SERVER_SHUTDOWN_TIMEOUT");
 
@@ -59,10 +59,12 @@ export async function startServer(): Promise<void> {
   const host = getEnvConfig("HOST");
   const port = getEnvConfig("PORT");
 
+  console.log(typeof port, port);
+
   // await CheckFirebase();
 
   server
-    .listen(port, host, () => {
+    .listen({ port, host }, () => {
       logger.info(`BigServer started at http://${host}:${port}`);
     })
     .once("error", (err: any) => {

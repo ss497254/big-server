@@ -11,8 +11,6 @@ import { setupApiRoutes } from "src/routes";
 export default async function createApp() {
   const app = express();
 
-  return app;
-
   app.disable("x-powered-by");
   app.set("trust proxy", getEnvConfig("IP_TRUST_PROXY") as number);
 
