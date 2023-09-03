@@ -55,7 +55,8 @@ export async function createServer(): Promise<http.Server> {
 }
 
 export async function startServer(): Promise<void> {
-  const server = await createServer();
+  // const server = await createServer();
+  const app = await createApp();
   const host = getEnvConfig("HOST");
   const port = getEnvConfig("PORT");
 
@@ -63,7 +64,7 @@ export async function startServer(): Promise<void> {
 
   // await CheckFirebase();
 
-  server
+  app
     .listen({ port, host }, () => {
       logger.info(`BigServer started at http://${host}:${port}`);
     })
