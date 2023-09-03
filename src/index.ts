@@ -1,9 +1,5 @@
-import express from "express";
+import { setupConfig } from "./config";
+import { startServer } from "./server";
 
-const app = express();
-
-app.get("/", (_req, res) => res.send("jo"));
-
-app.listen(process.env.PORT || 8080, () =>
-  console.log("started", process.env.PORT)
-);
+setupConfig();
+startServer();
