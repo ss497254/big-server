@@ -25,7 +25,7 @@ export const userLogin = asyncHandler(
       res.send({
         success: true,
         message: "Login successful",
-        data: { token },
+        data: { token, user },
       });
     } catch (e) {
       throw new InvalidCredentialsError();
