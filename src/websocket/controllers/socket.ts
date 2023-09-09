@@ -6,14 +6,12 @@ import { parse } from "url";
 import WebSocket, { WebSocketServer } from "ws";
 import { authenticateConnection, authenticationSuccess } from "../authenticate";
 import { WebSocketError, handleWebSocketError } from "../errors";
-import { WebSocketAuthMessage, WebSocketMessage } from "../messages";
+import { WebSocketMessage } from "../messages";
 import type {
   AuthenticationState,
   UpgradeContext,
   WebSocketClient,
 } from "../types";
-import { getMessageType } from "../utils/message";
-import { waitForAnyMessage } from "../utils/wait-for-message";
 
 const env = getEnv();
 
@@ -80,17 +78,16 @@ export default abstract class SocketController {
   }: UpgradeContext) {
     this.server.handleUpgrade(request, socket, head, async (ws) => {
       try {
-        const payload = await waitForAnyMessage(ws, 1000 * 60);
-        if (getMessageType(payload) !== "auth") throw new Error();
+        const access_token = parse(request.url!, true).query?.[
+          "access_token"
+        ] as string;
 
-        const state = await authenticateConnection(
-          WebSocketAuthMessage.parse(payload)
-        );
+        const accountability = await authenticateConnection(access_token);
 
-        ws.send(authenticationSuccess(payload["uid"]));
-        this.server.emit("connection", ws, state);
+        this.server.emit("connection", ws, { accountability });
       } catch {
         logger.debug("WebSocket authentication handshake failed");
+
         const error = new WebSocketError(
           "auth",
           "AUTH_FAILED",
@@ -98,7 +95,7 @@ export default abstract class SocketController {
         );
 
         handleWebSocketError(ws, error, "auth");
-        ws.close();
+        ws.close(3535, error.toMessage());
       }
     });
   }
@@ -106,56 +103,23 @@ export default abstract class SocketController {
   createClient(ws: WebSocket, { accountability }: AuthenticationState) {
     const client = ws as WebSocketClient;
 
-    ws.on("auth", async (data: WebSocket.RawData) => {
-      let message: WebSocketMessage;
-
-      try {
-        message = this.parseMessage(data.toString());
-      } catch (err: any) {
-        handleWebSocketError(client, err, "server");
-        return;
-      }
-
-      if (getMessageType(message) === "auth") {
-        try {
-          await this.handleAuthRequest(
-            client,
-            WebSocketAuthMessage.parse(message)
-          );
-        } catch {
-          // ignore errors
-        }
-
-        return;
-      }
-
-      // this log cannot be higher in the function or it will leak credentials
-      logger.info(`WebSocket#${client.username} - ${JSON.stringify(message)}`);
-      ws.emit("parsed-message", message);
-    });
+    client.accountability = accountability;
+    client.username = accountability!.username;
+    client.send(authenticationSuccess(client.username));
 
     ws.on("error", () => {
-      logger.debug(`WebSocket#${client.username} connection errored`);
-
       this.clients.delete(client.username);
     });
 
     ws.on("close", () => {
-      logger.debug(`WebSocket#${client.username} connection closed`);
-
       this.clients.delete(client.username);
     });
 
-    logger.debug(`WebSocket#${client.username} connected`);
-
-    if (accountability) {
-      logger.info(
-        `WebSocket#${client.username} authenticated as ${JSON.stringify(
-          accountability
-        )}`
-      );
-    }
-
+    logger.info(
+      `WebSocket#${client.username} authenticated as ${JSON.stringify(
+        accountability
+      )}`
+    );
     this.clients.set(client.username, client);
     return client;
   }
@@ -174,41 +138,6 @@ export default abstract class SocketController {
     }
 
     return message;
-  }
-
-  protected async handleAuthRequest(
-    client: WebSocketClient,
-    message: WebSocketAuthMessage
-  ) {
-    try {
-      const { accountability } = await authenticateConnection(message);
-
-      client.accountability = accountability;
-      client.username = accountability.username;
-      client.send(authenticationSuccess(message.uid));
-
-      logger.info(
-        `WebSocket#${client.username} authenticated as ${JSON.stringify(
-          client.accountability
-        )}`
-      );
-    } catch (error) {
-      logger.info(`WebSocket#${client.username} failed authentication`);
-
-      client.accountability = null;
-
-      const _error =
-        error instanceof WebSocketError
-          ? error
-          : new WebSocketError(
-              "auth",
-              "AUTH_FAILED",
-              "Authentication failed.",
-              message.uid
-            );
-
-      handleWebSocketError(client, _error, "auth");
-    }
   }
 
   terminate() {

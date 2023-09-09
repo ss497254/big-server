@@ -1,40 +1,25 @@
 import { getAccountabilityForToken } from "../utils/get-accountability-for-token";
 import { WebSocketError } from "./errors";
-import type { BasicAuthMessage, WebSocketResponse } from "./messages";
+import type { WebSocketResponse } from "./messages";
 
-export async function authenticateConnection(
-  message: BasicAuthMessage & Record<string, any>
-) {
-  let access_token: string | undefined;
-
+export async function authenticateConnection(access_token: string) {
   try {
-    if ("access_token" in message) {
-      access_token = message.access_token;
-    }
+    if (!access_token) throw new Error("No access_token provided");
 
-    if (!access_token) throw new Error();
-
-    const accountability = await getAccountabilityForToken(access_token);
-
-    return { accountability };
+    return await getAccountabilityForToken(access_token);
   } catch (error) {
-    throw new WebSocketError(
-      "auth",
-      "AUTH_FAILED",
-      "Authentication failed.",
-      message["uid"]
-    );
+    throw new WebSocketError("auth", "AUTH_FAILED", "Authentication failed.");
   }
 }
 
-export function authenticationSuccess(uid?: string | number): string {
+export function authenticationSuccess(username?: string | number): string {
   const message: WebSocketResponse = {
     type: "auth",
     status: "ok",
   };
 
-  if (uid !== undefined) {
-    message.uid = uid;
+  if (username !== undefined) {
+    message.username = username;
   }
 
   return JSON.stringify(message);
