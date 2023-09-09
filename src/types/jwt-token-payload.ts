@@ -1,5 +1,5 @@
 export type JWTTokenPayload = {
-  user: string;
-  role: string;
+  username: string;
   admin: boolean;
+  permissions: string[];
 };
