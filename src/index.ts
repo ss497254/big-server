@@ -1,5 +1,4 @@
-import { setupConfig } from "./config";
-import { startServer } from "./server";
+require("./config").setupConfig();
 
-setupConfig();
+import { startServer } from "./server";
 startServer();
