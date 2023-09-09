@@ -6,6 +6,7 @@ export const WebSocketMessage = z
   .object({
     type: z.string(),
     uid: zodStringOrNumber.optional(),
+    data: z.any(),
   })
   .passthrough();
 
@@ -32,13 +33,3 @@ export const ConnectionParams = z.object({
 });
 
 export type ConnectionParams = z.infer<typeof ConnectionParams>;
-
-export const BasicAuthMessage = z.object({ access_token: z.string() });
-
-export type BasicAuthMessage = z.infer<typeof BasicAuthMessage>;
-
-export const WebSocketAuthMessage = WebSocketMessage.extend({
-  type: z.literal("auth"),
-}).and(BasicAuthMessage);
-
-export type WebSocketAuthMessage = z.infer<typeof WebSocketAuthMessage>;

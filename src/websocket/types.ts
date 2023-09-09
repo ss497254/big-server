@@ -10,6 +10,7 @@ export type AuthenticationState = {
 export type WebSocketClient = WebSocket &
   AuthenticationState & {
     username: string;
+    channels: string[];
   };
 export type UpgradeRequest = IncomingMessage & AuthenticationState;
 
