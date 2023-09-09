@@ -1,5 +1,7 @@
 export const UsersTable = "users";
 
+export const JWT_ISSUER = "big_server";
+
 export const httpStatus = {
   ACCEPTED: 202,
   BAD_GATEWAY: 502,

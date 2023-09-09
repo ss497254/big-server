@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { JWT_ISSUER } from "src/constants";
 import {
   InvalidTokenError,
   ServiceUnavailableError,
@@ -11,7 +12,7 @@ export function verifyJWT(token: string, secret: string): Record<string, any> {
 
   try {
     payload = jwt.verify(token, secret, {
-      issuer: "BigServer",
+      issuer: JWT_ISSUER,
       algorithms: ["HS256"],
     }) as Record<string, any>;
   } catch (err) {
@@ -34,11 +35,15 @@ export function verifyAccessJWT(
   token: string,
   secret: string
 ): JWTTokenPayload {
-  const { user, role, admin } = verifyJWT(token, secret);
+  const { username, admin, permissions } = verifyJWT(token, secret);
 
-  if (user === undefined || role === undefined || admin === undefined) {
+  if (
+    username === undefined ||
+    admin === undefined ||
+    !Array.isArray(permissions)
+  ) {
     throw new InvalidTokenError();
   }
 
-  return { user, role, admin };
+  return { username, admin, permissions };
 }
