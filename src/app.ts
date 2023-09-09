@@ -41,11 +41,11 @@ export default async function createApp() {
 
   app.get("/", (_req, res) => {
     res.json({
-      message: "Hi, I'm BigServer",
+      message: "Hi, I'm big_server",
     });
   });
 
-  app.get("/server/ping", (_req, res) => res.send("pong"));
+  app.get("/ping", (_req, res) => res.send("pong"));
 
   setupApiRoutes(app);
 

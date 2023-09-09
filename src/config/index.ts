@@ -37,6 +37,11 @@ const env = {
     type: "string",
   } as IEnvVariable<string>,
 
+  PING_URL: {
+    value: undefined,
+    type: "string",
+  } as IEnvVariable<string>,
+
   CONFIG_PATH: {
     value: "config.json",
     type: "string",
@@ -81,12 +86,12 @@ const env = {
 
   // cors
   CORS_ENABLED: {
-    value: false,
+    value: true,
     type: "boolean",
   } as IEnvVariable<boolean>,
 
   CORS_ORIGIN: {
-    value: undefined,
+    value: "*",
     type: "string",
   } as IEnvVariable<string>,
 
@@ -106,7 +111,7 @@ const env = {
   } as IEnvVariable<string>,
 
   CORS_CREDENTIALS: {
-    value: true,
+    value: false,
     type: "boolean",
   } as IEnvVariable<boolean>,
 
