@@ -1,15 +1,17 @@
-import { Router } from "express";
-import user from "./user.route";
+import express, { Router } from "express";
+import userRoute from "./user.route";
+import adminRoute from "./admin.route";
 
 export interface IApiRoute {
   path: string;
   router: Router;
 }
 
-const API_ROUTES: IApiRoute[] = [{ path: "/user", router: user }];
-
 export const setupApiRoutes = (router: Router) => {
-  API_ROUTES.forEach((route) => {
-    router.use("/api" + route.path, route.router);
-  });
+  const apiRouter = express.Router();
+
+  apiRouter.use("/user", userRoute);
+  apiRouter.use("/admin", adminRoute);
+
+  router.use("/api", apiRouter);
 };
