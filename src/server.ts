@@ -10,6 +10,7 @@ import {
   getWebSocketController,
 } from "src/websocket/controllers";
 import { startWebSocketHandlers } from "src/websocket/handlers";
+import { KeepMeAlive } from "./lib/keep-me-alive";
 
 export let SERVER_ONLINE = true;
 
@@ -64,6 +65,8 @@ export async function startServer(): Promise<void> {
   server
     .listen({ port, host }, () => {
       logger.info(`BigServer started at http://${host}:${port}`);
+
+      KeepMeAlive();
     })
     .once("error", (err: any) => {
       if (err?.code === "EADDRINUSE") {
