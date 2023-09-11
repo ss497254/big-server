@@ -26,6 +26,8 @@ export const authenticate = (permissions = { admin: false }) =>
       defaultAccountability
     );
 
+    console.log(req.accountability);
+
     if (permissions.admin && !req.accountability.admin)
       throw new UnauthorizedError();
 
