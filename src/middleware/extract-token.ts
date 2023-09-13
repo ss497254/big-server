@@ -1,12 +1,3 @@
-/**
- * Extract access token from:
- *
- * Authorization: Bearer
- * access_token query parameter
- *
- * and store in req.token
- */
-
 import type { RequestHandler } from "express";
 
 const extractToken: RequestHandler = (req, _res, next) => {
@@ -16,9 +7,9 @@ const extractToken: RequestHandler = (req, _res, next) => {
     if (parts.length === 2 && parts[0]!.toLowerCase() === "bearer") {
       req.token = parts[1]!;
     }
-
-    next();
   }
+
+  next();
 };
 
 export default extractToken;
