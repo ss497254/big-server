@@ -16,11 +16,6 @@ export default async function createApp() {
 
   app.use(expressLogger);
 
-  app.use((_req, res, next) => {
-    res.setHeader("X-Powered-By", "BigServer");
-    next();
-  });
-
   if (getEnvConfig("CORS_ENABLED")) {
     app.use(cors);
   }
