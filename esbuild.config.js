@@ -1,5 +1,3 @@
-const startTime = new Date().getTime();
-
 const pretty = (x) => `\x1b[32m\x1b[1m${x}\x1b[0m`;
 
 require("esbuild")
@@ -11,12 +9,14 @@ require("esbuild")
     platform: "node",
     outdir: "dist",
     color: true,
+    treeShaking: true,
+    sourcemap: true,
   })
   .then(console.log)
   .catch(console.error)
   .finally(() =>
     console.log(
       // Print taken to complete the build
-      pretty(`Done in ${new Date().getTime() - startTime}ms`)
+      pretty(`Done in ${process.uptime()}sec`)
     )
   );
