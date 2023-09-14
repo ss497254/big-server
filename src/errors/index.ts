@@ -7,6 +7,7 @@ export { IllegalAssetTransformationError } from "./illegal-asset-transformation"
 export { InvalidCredentialsError } from "./invalid-credentials";
 export { InvalidIpError } from "./invalid-ip";
 export { InvalidPayloadError } from "./invalid-payload";
+export { IntenalServerError } from "./internal-server-error";
 export { InvalidProviderError } from "./invalid-provider";
 export { InvalidQueryError } from "./invalid-query";
 export { InvalidTokenError } from "./invalid-token";
