@@ -7,6 +7,7 @@ import { userAuthValidations } from "src/validations";
 import asyncHandler from "src/utils/async-handler";
 import { getEnvConfig } from "src/config";
 import { removeKey } from "src/utils/remove-key";
+import { createSuccesResponse } from "src/utils/create-success-response";
 
 export const userLogin = asyncHandler(
   async (
@@ -23,11 +24,7 @@ export const userLogin = asyncHandler(
 
       const token = createAccessToken(user);
 
-      res.json({
-        success: true,
-        message: "Login successful",
-        data: { token, user },
-      });
+      res.json(createSuccesResponse({ token, user }, "Login successful"));
     } catch (e) {
       throw new InvalidCredentialsError();
     }
@@ -47,11 +44,7 @@ export const userRegister = asyncHandler(
         removeKey("secret", req.body)
       );
 
-      res.json({
-        success: true,
-        message: "Registration successful",
-        data: { user },
-      });
+      res.json(createSuccesResponse({ user }, "Registration successful"));
     } catch (e) {
       throw new ForbiddenError();
     }
