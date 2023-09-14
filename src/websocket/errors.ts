@@ -49,7 +49,7 @@ export class WebSocketError extends Error {
 
 export function handleWebSocketError(
   client: WebSocketClient | WebSocket,
-  error: unknown,
+  error: any,
   type?: string
 ): void {
   if (isBigServerError(error)) {
@@ -64,6 +64,9 @@ export function handleWebSocketError(
 
   // unhandled exceptions
   logger.error(
-    `WebSocket unhandled exception ${JSON.stringify({ type, error })}`
+    `WebSocket unhandled exception ${error.toString()} ${JSON.stringify({
+      type,
+      error,
+    })}`
   );
 }
