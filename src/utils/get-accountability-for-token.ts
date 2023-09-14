@@ -10,11 +10,10 @@ export async function getAccountabilityForToken(
 ): Promise<Accountability> {
   if (token) {
     if (isBigServerJWT(token)) {
-      const payload = verifyAccessJWT(token, getEnvConfig("JWT_SECRET"));
-
-      accountability = { ...accountability, ...payload };
-
-      return accountability as Accountability;
+      return {
+        ...accountability,
+        ...verifyAccessJWT(token, getEnvConfig("JWT_SECRET")),
+      } as Accountability;
     }
   }
 

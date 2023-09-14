@@ -1,4 +1,5 @@
 export const UsersTable = "users";
+export const ChannelsTable = "channels";
 
 export const JWT_ISSUER = "big_server";
 
