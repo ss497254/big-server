@@ -85,17 +85,9 @@ export default abstract class SocketController {
         const accountability = await authenticateConnection(access_token);
 
         this.server.emit("connection", ws, { accountability });
-      } catch {
-        logger.debug("WebSocket authentication handshake failed");
-
-        const error = new WebSocketError(
-          "auth",
-          "AUTH_FAILED",
-          "Authentication handshake failed."
-        );
-
-        handleWebSocketError(ws, error, "auth");
-        ws.close(3535, error.toMessage());
+      } catch (error: any) {
+        handleWebSocketError(ws, error, "unknown");
+        ws.close(3535, error.toString());
       }
     });
   }
@@ -106,6 +98,7 @@ export default abstract class SocketController {
     client.accountability = accountability;
     client.username = accountability!.username;
     client.send(authenticationSuccess(client.username));
+    client.channels = [];
 
     ws.on("error", () => {
       this.clients.delete(client.username);

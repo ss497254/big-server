@@ -1,10 +1,9 @@
 import type { Server as httpServer } from "http";
 import logger from "src/lib/logger";
 import type WebSocket from "ws";
-import { handleWebSocketError } from "../errors";
-import { WebSocketMessage } from "../messages";
 import type { AuthenticationState, WebSocketClient } from "../types";
 import SocketController from "./socket";
+import { userJoin, userLeft } from "src/services/chats.service";
 
 export class WebSocketController extends SocketController {
   constructor(httpServer: httpServer) {
@@ -16,22 +15,17 @@ export class WebSocketController extends SocketController {
   }
 
   private bindEvents(client: WebSocketClient) {
-    client.on("parsed-message", async (message: WebSocketMessage) => {
-      try {
-        message = WebSocketMessage.parse(message);
-      } catch (error) {
-        handleWebSocketError(client, error, "server");
-        return;
-      }
-    });
+    userJoin(client);
 
     client.on("error", (event: WebSocket.Event) => {
+      userLeft(client);
       logger.warn(
         `websocket.close: ${client.username} ${event.type} ${event.target}`
       );
     });
 
     client.on("close", (event: WebSocket.CloseEvent) => {
+      userLeft(client);
       logger.warn(
         `websocket.close: ${client.username} ${event.code} ${event.reason}`
       );
