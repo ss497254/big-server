@@ -74,5 +74,8 @@ export const addOrUpdateItem = async (
   id: string,
   data: any
 ) => {
-  return await firestore.collection(collectionName).doc(id).set(data);
+  return await firestore
+    .collection(collectionName)
+    .doc(id)
+    .set(data, { merge: true });
 };
