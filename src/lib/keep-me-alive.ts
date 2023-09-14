@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { getEnvConfig } from "src/config";
+import { __prod__, getEnvConfig } from "src/config";
 import logger from "./logger";
 
 const pingUrl = getEnvConfig("PING_URL");
@@ -7,7 +7,7 @@ const pongUrl = getEnvConfig("PUBLIC_URL") + "/ping";
 export let lastPingResponse: AxiosResponse["data"];
 
 export const KeepMeAlive = async () => {
-  if (!pingUrl) return;
+  if (!pingUrl || !__prod__) return;
 
   let nextPing = 1000 * 60 * 10; // 10 minutes
 
