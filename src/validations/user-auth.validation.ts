@@ -14,9 +14,8 @@ export const userRegister = z.object({
     .object({
       username: z.string({ required_error: "username is required" }),
       password: z.string({ required_error: "password is required" }),
-      role: z.string({ required_error: "role is required" }),
       admin: z.boolean().default(false),
-      permission: z.array(z.string()).default([]),
+      permissions: z.array(z.string()).default([]),
       secret: z.string({ required_error: "secret is required" }),
     })
     .strict(),
