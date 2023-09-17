@@ -96,9 +96,9 @@ export default abstract class SocketController {
     const client = ws as WebSocketClient;
 
     client.accountability = accountability;
-    client.username = accountability!.username;
+    client.username = accountability.username;
+    client.connectTime = new Date().toLocaleString();
     client.send(authenticationSuccess(client.username));
-    client.channels = [];
 
     ws.on("error", () => {
       this.clients.delete(client.username);

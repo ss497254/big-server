@@ -26,7 +26,7 @@ export class WebSocketController extends SocketController {
 
     client.on("close", (event: WebSocket.CloseEvent) => {
       userLeft(client);
-      logger.warn(
+      logger.info(
         `websocket.close: ${client.username} ${event.code} ${event.reason}`
       );
     });
