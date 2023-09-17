@@ -4,14 +4,15 @@ import type internal from "stream";
 import type { WebSocket } from "ws";
 
 export type AuthenticationState = {
-  accountability: Accountability | null;
+  accountability: Accountability;
 };
 
 export type WebSocketClient = WebSocket &
   AuthenticationState & {
     username: string;
-    channels: string[];
+    connectTime: string;
   };
+
 export type UpgradeRequest = IncomingMessage & AuthenticationState;
 
 export type UpgradeContext = {
