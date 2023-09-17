@@ -10,7 +10,12 @@ router.use(authenticate());
 
 router.get("/channels", chatsController.getChannels);
 
-router.get("/messages", [
+router.get("/channels/:channel/users", [
+  validate(chatsValidations.getUserOfChannel),
+  chatsController.getUserOfChannel,
+]);
+
+router.get("/channels/:channel/messages", [
   validate(chatsValidations.getMessages),
   chatsController.getMessages,
 ]);
