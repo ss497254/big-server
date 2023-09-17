@@ -30,7 +30,8 @@ export const getMessages = asyncHandler(
     req: Override<Request, z.infer<typeof chatsValidations.getMessages>>,
     res: Response
   ) => {
-    const { cursor, channel } = req.query;
+    const { cursor } = req.query;
+    const { channel } = req.params;
 
     try {
       const data = await chatsService.getMessages(channel, cursor);
@@ -53,6 +54,19 @@ export const getChannels = asyncHandler(async (req: Request, res: Response) => {
     throw new IntenalServerError({ error });
   }
 });
+
+export const getUserOfChannel = asyncHandler(
+  async (req: Request, res: Response) => {
+    try {
+      const { channel } = req.params;
+      const data = chatsService.getUsersOfChannel(channel);
+
+      res.json(createSuccesResponse(data));
+    } catch (error) {
+      throw new IntenalServerError({ error });
+    }
+  }
+);
 
 export const createChannel = asyncHandler(
   async (
