@@ -10,10 +10,22 @@ export const sendMessage = z.object({
 });
 
 export const getMessages = z.object({
-  query: z
+  params: z
     .object({
       channel: z.string({ required_error: "channel is required" }),
+    })
+    .strict(),
+  query: z
+    .object({
       cursor: z.string({ required_error: "cursor is required" }),
+    })
+    .strict(),
+});
+
+export const getUserOfChannel = z.object({
+  params: z
+    .object({
+      channel: z.string({ required_error: "channel is required" }),
     })
     .strict(),
 });
