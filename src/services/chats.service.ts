@@ -61,8 +61,8 @@ export const sendMessage = async (
     username,
     content,
     timestamp,
-    image,
-  };
+  } as IMessage;
+  if (image) message.image = image;
 
   await addItemWithId(channel, timestamp.toString(), message);
   updateItem(ChannelsTable, channel, {
