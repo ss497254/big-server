@@ -53,13 +53,15 @@ export const getUsersOfChannel = (channel: string) => {
 export const sendMessage = async (
   channel: string,
   username: string,
-  content: string
+  content: string,
+  image?: string
 ) => {
   const timestamp = new Date().getTime();
   const message = {
     username,
     content,
     timestamp,
+    image,
   };
 
   await addItemWithId(channel, timestamp.toString(), message);

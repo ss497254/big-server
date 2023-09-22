@@ -13,10 +13,15 @@ export const sendMessage = asyncHandler(
     res: Response
   ) => {
     const { username } = req.accountability!;
-    const { channel, content } = req.body;
+    const { channel, content, image } = req.body;
 
     try {
-      const data = await chatsService.sendMessage(channel, username, content);
+      const data = await chatsService.sendMessage(
+        channel,
+        username,
+        content,
+        image
+      );
 
       res.json(createSuccesResponse(data));
     } catch (error) {

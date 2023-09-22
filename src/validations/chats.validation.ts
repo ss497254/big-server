@@ -5,6 +5,7 @@ export const sendMessage = z.object({
     .object({
       channel: z.string({ required_error: "channel is required" }),
       content: z.string({ required_error: "content is required" }),
+      image: z.string().optional(),
     })
     .strict(),
 });
