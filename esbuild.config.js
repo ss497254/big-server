@@ -11,6 +11,7 @@ require("esbuild")
     color: true,
     treeShaking: true,
     sourcemap: true,
+    keepNames: true,
   })
   .then(console.log)
   .catch(console.error)
