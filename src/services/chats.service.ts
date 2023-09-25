@@ -9,6 +9,8 @@ import { FieldValue } from "firebase-admin/firestore";
 import { IMessage } from "src/types";
 import { WebSocketClient } from "src/websocket/types";
 import logger from "src/lib/logger";
+import { addFile } from "src/firebase/storage";
+import dataUriToBuffer from "src/utils/datauri-to-buffer";
 
 const ActiveChannels = new Map<string, Set<WebSocketClient>>();
 const UserInChannel = new Map<string, string[]>();
@@ -62,7 +64,12 @@ export const sendMessage = async (
     content,
     timestamp,
   } as IMessage;
-  if (image) message.image = image;
+  if (image) {
+    message.image = await addFile(
+      `${channel}/${username}-${timestamp}`,
+      dataUriToBuffer(image)
+    );
+  }
 
   await addItemWithId(channel, timestamp.toString(), message);
   updateItem(ChannelsTable, channel, {
