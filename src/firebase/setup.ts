@@ -1,7 +1,6 @@
 import { App, cert, getApps, initializeApp } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
 import logger from "src/lib/logger";
-import { setFirebaseEntities } from ".";
+import { bucket, firestore, setFirebaseEntities } from ".";
 import { getEnvConfig } from "../config";
 
 export let FirebaseInstance: App;
@@ -31,7 +30,8 @@ export const InitializeFirebase = async () => {
 };
 
 export const CheckFirebase = async () => {
-  await getFirestore(FirebaseInstance).listCollections();
+  await firestore.listCollections();
+  await bucket.getFiles({ maxResults: 1 });
 
   logger.info("Firebase intialized successfullly.");
 };
