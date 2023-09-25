@@ -63,7 +63,7 @@ const env = {
   } as IEnvVariable<number>,
 
   MAX_REQ_PAYLOAD_SIZE: {
-    value: 1000 * 100,
+    value: 1000 * 1000,
     type: "number",
   } as IEnvVariable<number>,
 
@@ -150,6 +150,13 @@ const env = {
   } as IEnvVariable<string>,
 
   FIREBASE_PROJECT_ID: {
+    value: undefined,
+    type: "string",
+    required: true,
+    exclusive: true,
+  } as IEnvVariable<string>,
+
+  FIREBASE_BUCKET_NAME: {
     value: undefined,
     type: "string",
     required: true,
