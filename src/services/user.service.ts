@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { UsersTable } from "src/constants";
 import logger from "src/lib/logger";
-import { Accountability } from "src/types";
+import { User } from "src/types";
 import { userAuthValidations } from "src/validations";
 import z from "zod";
 import { addItemWithId, getItemById } from "../firebase/database";
@@ -13,7 +13,7 @@ export const getUser = async (username: string) => {
   logger.debug("get-user", user);
   if (!user) throw new Error("User not found!");
 
-  return removeKey("password", user) as Accountability;
+  return removeKey("password", user) as User;
 };
 
 export const verifyUserByUsernameAndPassword = async (
@@ -23,7 +23,7 @@ export const verifyUserByUsernameAndPassword = async (
   const user = (await getItemById(UsersTable, username)).data();
 
   if (user && (await bcrypt.compare(password, user.password)))
-    return removeKey("password", user) as Accountability;
+    return removeKey("password", user) as User;
 
   throw new Error("invalid cred");
 };
