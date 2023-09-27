@@ -17,14 +17,12 @@ const env = getEnv();
 
 export default abstract class SocketController {
   server: WebSocket.Server;
-  clients: Map<string, WebSocketClient>;
 
   endpoint: string;
   maxConnections: number;
 
   constructor(httpServer: httpServer) {
     this.server = new WebSocketServer({ noServer: true });
-    this.clients = new Map();
 
     const { endpoint, maxConnections } = this.getEnvironmentConfig();
     this.endpoint = endpoint;
@@ -61,7 +59,7 @@ export default abstract class SocketController {
     const { pathname } = parse(request.url!, true);
     if (pathname !== this.endpoint) return;
 
-    if (this.clients.size >= this.maxConnections) {
+    if (this.server.clients.size >= this.maxConnections) {
       logger.debug("WebSocket upgrade denied - max connections reached");
       socket.write("HTTP/1.1 403 Forbidden\r\n\r\n");
       socket.destroy();
@@ -100,20 +98,12 @@ export default abstract class SocketController {
     client.connectTime = new Date().toLocaleString();
     client.send(authenticationSuccess(client.username));
 
-    ws.on("error", () => {
-      this.clients.delete(client.username);
-    });
-
-    ws.on("close", () => {
-      this.clients.delete(client.username);
-    });
-
     logger.info(
       `WebSocket#${client.username} authenticated as ${JSON.stringify(
         accountability
       )}`
     );
-    this.clients.set(client.username, client);
+
     return client;
   }
 
