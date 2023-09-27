@@ -35,15 +35,11 @@ export function verifyAccessJWT(
   token: string,
   secret: string
 ): JWTTokenPayload {
-  const { username, admin, permissions } = verifyJWT(token, secret);
+  const payload = verifyJWT(token, secret) as JWTTokenPayload;
 
-  if (
-    username === undefined ||
-    admin === undefined ||
-    !Array.isArray(permissions)
-  ) {
+  if (payload.username === undefined || !Array.isArray(payload.permissions)) {
     throw new InvalidTokenError();
   }
 
-  return { username, admin, permissions };
+  return payload;
 }

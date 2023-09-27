@@ -8,13 +8,11 @@ export async function getAccountabilityForToken(
   token?: string | null,
   accountability: Partial<Accountability> = {}
 ): Promise<Accountability> {
-  if (token) {
-    if (isBigServerJWT(token)) {
-      return {
-        ...accountability,
-        ...verifyAccessJWT(token, getEnvConfig("JWT_SECRET")),
-      } as Accountability;
-    }
+  if (token && isBigServerJWT(token)) {
+    return {
+      ...accountability,
+      ...verifyAccessJWT(token, getEnvConfig("JWT_SECRET")),
+    } as Accountability;
   }
 
   throw new InvalidTokenError();

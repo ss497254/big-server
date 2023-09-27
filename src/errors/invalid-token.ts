@@ -3,6 +3,6 @@ import { ErrorCode } from "./codes";
 
 export const InvalidTokenError = createError(
   ErrorCode.InvalidToken,
-  "Invalid token.",
+  "Invalid token",
   403
 );
