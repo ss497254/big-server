@@ -7,8 +7,8 @@ export async function authenticateConnection(access_token: string) {
     if (!access_token) throw new Error("No access_token provided");
 
     return await getAccountabilityForToken(access_token);
-  } catch (error) {
-    throw new WebSocketError("auth", "AUTH_FAILED", "Authentication failed.");
+  } catch (error: any) {
+    throw new WebSocketError("auth", "AUTH_FAILED", error.message);
   }
 }
 
