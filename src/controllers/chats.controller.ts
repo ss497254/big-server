@@ -49,10 +49,8 @@ export const getMessages = asyncHandler(
 );
 
 export const getChannels = asyncHandler(async (req: Request, res: Response) => {
-  const { permissions } = req.accountability!;
-
   try {
-    const data = await chatsService.getChannels(permissions);
+    const data = await chatsService.getChannels(req.accountability!);
 
     res.json(createSuccesResponse(data));
   } catch (error) {
