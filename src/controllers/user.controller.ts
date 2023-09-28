@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ForbiddenError, InvalidCredentialsError } from "src/errors";
 import { z } from "zod";
-import { userService } from "src/services";
+import { chatsService, userService } from "src/services";
 import { createAccessToken } from "src/utils/create-access-token";
 import { userAuthValidations } from "src/validations";
 import asyncHandler from "src/utils/async-handler";
@@ -22,9 +22,16 @@ export const userLogin = asyncHandler(
         password
       );
 
-      const token = createAccessToken(user);
-
-      res.json(createSuccesResponse({ token, user }, "Login successful"));
+      res.json(
+        createSuccesResponse(
+          {
+            user,
+            token: createAccessToken(user),
+            channels: await chatsService.getChannels(user),
+          },
+          "Login successful"
+        )
+      );
     } catch (e) {
       throw new InvalidCredentialsError();
     }
