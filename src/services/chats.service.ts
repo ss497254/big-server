@@ -6,7 +6,7 @@ import {
   updateItem,
 } from "src/firebase/database";
 import { FieldValue } from "firebase-admin/firestore";
-import { IMessage } from "src/types";
+import { Accountability, IMessage } from "src/types";
 import { WebSocketClient } from "src/websocket/types";
 import logger from "src/lib/logger";
 import { addFile } from "src/firebase/storage";
@@ -30,11 +30,16 @@ export const createChannel = async (channel: string, data: any) => {
   return result;
 };
 
-export const getChannels = async (permissions: string[]) => {
-  const data = await firestore
-    .collection(ChannelsTable)
-    .where("access", "in", permissions)
-    .get();
+export const getChannels = async (accountability: Accountability) => {
+  const channelCollection = firestore.collection(ChannelsTable);
+  const data = await (accountability.admin
+    ? channelCollection
+    : channelCollection.where(
+        "users",
+        "array-contains",
+        accountability.username
+      )
+  ).get();
 
   return data.docs.map((x) => ({
     name: x.id,
@@ -120,11 +125,17 @@ export const leaveChannel = (channelName: string, client: WebSocketClient) => {
 export const userJoin = async (client: WebSocketClient) => {
   logger.info("user join", client.username, client.connectTime);
 
-  const { permissions } = client.accountability!;
-  const channels = (await getChannels(permissions)).map((x) => x.name);
+  try {
+    const channels = (await getChannels(client.accountability)).map(
+      (x) => x.name
+    );
 
-  channels.forEach((channel) => joinChannel(channel, client));
-  UserInChannel.set(client.username, channels);
+    channels.forEach((channel) => joinChannel(channel, client));
+    UserInChannel.set(client.username, channels);
+  } catch (e) {
+    logger.warn(e);
+    UserInChannel.set(client.username, []);
+  }
 };
 
 export const userLeft = (client: WebSocketClient) => {
