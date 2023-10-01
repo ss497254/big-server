@@ -72,7 +72,8 @@ export const sendMessage = async (
   if (image) {
     message.image = await addFile(
       `${channel}/${username}-${timestamp}`,
-      dataUriToBuffer(image)
+      dataUriToBuffer(image),
+      "image/jpeg"
     );
   }
 
