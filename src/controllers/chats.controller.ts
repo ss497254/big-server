@@ -37,9 +37,12 @@ export const getMessages = asyncHandler(
   ) => {
     const { cursor } = req.query;
     const { channel } = req.params;
+    const limit = req.query.limit
+      ? Math.min(15, parseInt(req.query.limit))
+      : undefined;
 
     try {
-      const data = await chatsService.getMessages(channel, cursor);
+      const data = await chatsService.getMessages(channel, cursor, limit);
 
       res.json(createSuccesResponse(data));
     } catch (error) {

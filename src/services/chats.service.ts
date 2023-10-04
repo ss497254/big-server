@@ -110,11 +110,15 @@ export const sendMessage = async (
   return message;
 };
 
-export const getMessages = async (channel: string, cursor: string) => {
+export const getMessages = async (
+  channel: string,
+  cursor: string,
+  limit = 15
+) => {
   const result = await getCollectionData(channel)
     .orderBy("timestamp", "desc")
     .startAfter(parseInt(cursor))
-    .limit(15)
+    .limit(limit)
     .get();
 
   return result.docs.map((x) => x.data());
