@@ -57,3 +57,22 @@ export const userRegister = asyncHandler(
     }
   }
 );
+
+export const resetPassword = asyncHandler(
+  async (
+    req: Override<Request, z.infer<typeof userAuthValidations.resetPassword>>,
+    res: Response
+  ) => {
+    if (req.body.secret !== getEnvConfig("USER_REGISTER_SECRET"))
+      throw new ForbiddenError();
+
+    const { username, password } = req.body;
+    try {
+      const data = await userService.resetPassword(username, password);
+
+      res.json(createSuccesResponse({ data }, "Password Reset successful"));
+    } catch (e) {
+      throw new ForbiddenError();
+    }
+  }
+);
