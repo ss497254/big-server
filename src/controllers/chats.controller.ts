@@ -76,15 +76,61 @@ export const createChannel = asyncHandler(
     req: Override<Request, z.infer<typeof chatsValidations.createChannel>>,
     res: Response
   ) => {
-    const { channel, access } = req.body;
+    const { channel, users } = req.body;
 
     try {
       const data = await chatsService.createChannel(
         channel,
-        createEmptyChannel(access)
+        createEmptyChannel(users)
       );
 
-      res.json(createSuccesResponse(data));
+      res.json(
+        createSuccesResponse({
+          data,
+        })
+      );
+    } catch (error) {
+      throw new IntenalServerError({
+        error,
+      });
+    }
+  }
+);
+
+export const addUserToChannel = asyncHandler(
+  async (
+    req: Override<Request, z.infer<typeof chatsValidations.createChannel>>,
+    res: Response
+  ) => {
+    const { channel, users } = req.body;
+
+    try {
+      res.json(
+        createSuccesResponse({
+          data: await chatsService.addUserToChannel(channel, users),
+        })
+      );
+    } catch (error) {
+      throw new IntenalServerError({
+        error,
+      });
+    }
+  }
+);
+
+export const deleteChannel = asyncHandler(
+  async (
+    req: Override<Request, z.infer<typeof chatsValidations.deleteChannel>>,
+    res: Response
+  ) => {
+    const { channel } = req.body;
+
+    try {
+      res.json(
+        createSuccesResponse({
+          data: await chatsService.deleteChannel(channel),
+        })
+      );
     } catch (error) {
       throw new IntenalServerError({
         error,

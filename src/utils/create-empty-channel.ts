@@ -1,3 +1,3 @@
-export const createEmptyChannel = (access: string) => {
-  return { access, messages: 0 };
+export const createEmptyChannel = (users: string[]) => {
+  return { users, messages: 0 };
 };
