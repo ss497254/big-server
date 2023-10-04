@@ -4,7 +4,7 @@ import logger from "src/lib/logger";
 import { User } from "src/types";
 import { userAuthValidations } from "src/validations";
 import z from "zod";
-import { addItemWithId, getItemById } from "../firebase/database";
+import { addItemWithId, getItemById, updateItem } from "../firebase/database";
 import { removeKey } from "../utils/remove-key";
 
 export const getUser = async (username: string) => {
@@ -36,4 +36,10 @@ export const registerUser = async (
   await addItemWithId(UsersTable, user.username, user);
 
   return removeKey("password", user);
+};
+
+export const resetPassword = async (username: string, password: string) => {
+  return await updateItem(UsersTable, username, {
+    password: await bcrypt.hash(password, 4),
+  });
 };
