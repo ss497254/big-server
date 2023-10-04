@@ -18,4 +18,14 @@ router.post("/create-channel", [
   chatsController.createChannel,
 ]);
 
+router.patch("/update-channel", [
+  validate(chatsValidations.addUserToChannel),
+  chatsController.addUserToChannel,
+]);
+
+router.delete("/delete-channel", [
+  validate(chatsValidations.deleteChannel),
+  chatsController.deleteChannel,
+]);
+
 export default router;
