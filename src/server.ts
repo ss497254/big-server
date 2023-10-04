@@ -24,10 +24,7 @@ export async function createServer(): Promise<http.Server> {
   const serverShutdownTimeout = getEnvConfig("SERVER_SHUTDOWN_TIMEOUT");
 
   const terminusOptions: TerminusOptions = {
-    timeout:
-      serverShutdownTimeout >= 0 && serverShutdownTimeout < Infinity
-        ? serverShutdownTimeout
-        : 1000,
+    timeout: serverShutdownTimeout,
     signals: ["SIGINT", "SIGTERM", "SIGHUP"],
     beforeShutdown,
     onSignal,
@@ -51,7 +48,7 @@ export async function createServer(): Promise<http.Server> {
   }
 
   async function onShutdown() {
-    logger.info("BigServer is shutting down, OK. Bye bye!");
+    logger.info("BigServer is shutting down, OK. Khatam, Tata, Bye!");
   }
 }
 
