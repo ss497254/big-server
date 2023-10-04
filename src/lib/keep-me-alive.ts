@@ -9,7 +9,7 @@ export let lastPingResponse: AxiosResponse["data"];
 export const KeepMeAlive = async () => {
   if (!pingUrl || !__prod__) return;
 
-  let nextPing = 1000 * 60 * 10; // 10 minutes
+  let nextPing = getEnvConfig("PING_INTERVAL");
 
   try {
     logger.info("Sending ping request");
