@@ -19,6 +19,7 @@ export const getMessages = z.object({
   query: z
     .object({
       cursor: z.string({ required_error: "cursor is required" }),
+      limit: z.string().optional(),
     })
     .strict(),
 });
@@ -35,7 +36,24 @@ export const createChannel = z.object({
   body: z
     .object({
       channel: z.string({ required_error: "channel is required" }),
-      access: z.string({ required_error: "access is required" }),
+      users: z.array(z.string()).default([]),
+    })
+    .strict(),
+});
+
+export const addUserToChannel = z.object({
+  body: z
+    .object({
+      channel: z.string({ required_error: "channel is required" }),
+      users: z.array(z.string({ required_error: "users are required" })),
+    })
+    .strict(),
+});
+
+export const deleteChannel = z.object({
+  body: z
+    .object({
+      channel: z.string({ required_error: "channel is required" }),
     })
     .strict(),
 });
