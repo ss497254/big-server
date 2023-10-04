@@ -20,3 +20,13 @@ export const userRegister = z.object({
     })
     .strict(),
 });
+
+export const resetPassword = z.object({
+  body: z
+    .object({
+      username: z.string({ required_error: "username is required" }),
+      password: z.string({ required_error: "password is required" }),
+      secret: z.string({ required_error: "secret is required" }),
+    })
+    .strict(),
+});
