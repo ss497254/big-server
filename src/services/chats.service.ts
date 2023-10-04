@@ -30,6 +30,28 @@ export const createChannel = async (channel: string, data: any) => {
   return result;
 };
 
+export async function addUserToChannel(channel: string, users: string[]) {
+  return await firestore
+    .collection(ChannelsTable)
+    .doc(channel)
+    .update({ users: FieldValue.arrayUnion(users) });
+}
+
+export async function deleteChannel(channel: string) {
+  const result = await firestore
+    .collection(ChannelsTable)
+    .doc(channel)
+    .delete();
+
+  if (ActiveChannels.get(channel)) {
+    [...ActiveChannels.get(channel)!.values()].forEach((client) =>
+      leaveChannel(channel, client)
+    );
+  }
+
+  return result;
+}
+
 export const getChannels = async (accountability: Accountability) => {
   const channelCollection = firestore.collection(ChannelsTable);
   const data = await (accountability.admin
