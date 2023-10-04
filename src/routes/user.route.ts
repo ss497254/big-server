@@ -15,4 +15,9 @@ router.post("/register", [
   userController.userRegister,
 ]);
 
+router.post("/reset-password", [
+  validate(userAuthValidations.resetPassword),
+  userController.resetPassword,
+]);
+
 export default router;
