@@ -1,6 +1,6 @@
 export interface IChannel {
   name: string;
-  access: string;
+  users: string[];
   messages: number;
   lastUpdate: number;
 }
