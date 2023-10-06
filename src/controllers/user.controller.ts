@@ -38,6 +38,32 @@ export const userLogin = asyncHandler(
   }
 );
 
+export const getMe = asyncHandler(
+  async (
+    req: Override<Request, z.infer<typeof userAuthValidations.userLogin>>,
+    res: Response
+  ) => {
+    const { username } = req.accountability!;
+
+    try {
+      const user = await userService.getUser(username);
+
+      res.json(
+        createSuccesResponse(
+          {
+            user,
+            token: createAccessToken(user),
+            channels: await chatsService.getChannels(user),
+          },
+          "Login successful"
+        )
+      );
+    } catch (e) {
+      throw new InvalidCredentialsError();
+    }
+  }
+);
+
 export const userRegister = asyncHandler(
   async (
     req: Override<Request, z.infer<typeof userAuthValidations.userRegister>>,
