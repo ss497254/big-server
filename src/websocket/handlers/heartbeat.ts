@@ -13,10 +13,10 @@ export class HeartbeatHandler {
   private pulse: NodeJS.Timeout | undefined;
   private controller: WebSocketController;
 
-  constructor(controller?: WebSocketController) {
-    this.controller = controller ?? getWebSocketController();
+  constructor() {
+    this.controller = getWebSocketController();
 
-    this.controller.server.on("connection", this.checkClients);
+    this.controller.server.on("connection", this.checkClients.bind(this));
   }
 
   checkClients() {
@@ -28,9 +28,10 @@ export class HeartbeatHandler {
     }
 
     if (hasClients) {
-      this.pulse = setInterval(() => {
-        this.pingClients();
-      }, HEARTBEAT_FREQUENCY);
+      this.pulse = setInterval(
+        this.pingClients.bind(this),
+        HEARTBEAT_FREQUENCY
+      );
     }
   }
 
