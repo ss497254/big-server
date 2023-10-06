@@ -168,7 +168,12 @@ export const userJoin = async (client: WebSocketClient) => {
 export const userLeft = (client: WebSocketClient) => {
   logger.info("user left", client.username, client.connectTime);
 
-  UserInChannel.get(client.username)!.forEach((channel) =>
-    leaveChannel(channel, client)
-  );
+  if (UserInChannel.get(client.username))
+    UserInChannel.get(client.username)!.forEach((channel) =>
+      leaveChannel(channel, client)
+    );
+  else
+    logger.warn(
+      "user is not present in UserInChannel (this should not happen)"
+    );
 };
