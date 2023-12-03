@@ -13,12 +13,38 @@ export const sendMessage = asyncHandler(
     res: Response
   ) => {
     const { username } = req.accountability!;
-    const { channel, content, image } = req.body;
+    const { channel } = req.params;
+    const { content, image } = req.body;
 
     try {
       const data = await chatsService.sendMessage(
         channel,
         username,
+        content,
+        image
+      );
+
+      res.json(createSuccesResponse(data));
+    } catch (error) {
+      throw new IntenalServerError({ error });
+    }
+  }
+);
+
+export const editMessage = asyncHandler(
+  async (
+    req: Override<Request, z.infer<typeof chatsValidations.editMessage>>,
+    res: Response
+  ) => {
+    const { username } = req.accountability!;
+    const { channel } = req.params;
+    const { timestamp, content, image } = req.body;
+
+    try {
+      const data = await chatsService.editMessage(
+        channel,
+        username,
+        timestamp,
         content,
         image
       );
