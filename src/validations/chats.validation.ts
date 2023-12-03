@@ -1,10 +1,29 @@
 import { z } from "zod";
 
 export const sendMessage = z.object({
-  body: z
+  params: z
     .object({
       channel: z.string({ required_error: "channel is required" }),
+    })
+    .strict(),
+  body: z
+    .object({
       content: z.string({ required_error: "content is required" }),
+      image: z.string().optional(),
+    })
+    .strict(),
+});
+
+export const editMessage = z.object({
+  params: z
+    .object({
+      channel: z.string({ required_error: "channel is required" }),
+    })
+    .strict(),
+  body: z
+    .object({
+      timestamp: z.union([z.string(), z.number()]),
+      content: z.string({ required_error: "content is required" }).optional(),
       image: z.string().optional(),
     })
     .strict(),
