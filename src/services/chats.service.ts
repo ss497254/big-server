@@ -2,6 +2,7 @@ import { ChannelsTable } from "src/constants";
 import { firestore } from "src/firebase";
 import {
   addItemWithId,
+  addOrUpdateItem,
   getCollectionData,
   updateItem,
 } from "src/firebase/database";
@@ -14,6 +15,10 @@ import dataUriToBuffer from "src/utils/datauri-to-buffer";
 
 const ActiveChannels = new Map<string, Set<WebSocketClient>>();
 const UserInChannel = new Map<string, string[]>();
+
+const sendMessageInChannel = (channel: string, message: IMessage) =>
+  ActiveChannels.has(channel) &&
+  queueMicrotask(() => broadcastMessageToClients(channel, message));
 
 const broadcastMessageToClients = (channel: string, message: IMessage) => {
   ActiveChannels.get(channel)!.forEach((client) => {
@@ -104,8 +109,36 @@ export const sendMessage = async (
     messages: FieldValue.increment(1),
   }).catch(logger.warn);
 
-  if (ActiveChannels.has(channel))
-    setImmediate(() => broadcastMessageToClients(channel, message));
+  sendMessageInChannel(channel, message);
+
+  return message;
+};
+
+export const editMessage = async (
+  channel: string,
+  username: string,
+  timestamp: string | number,
+  content?: string,
+  image?: string
+) => {
+  const message = {
+    username,
+    timestamp,
+    edited: true,
+  } as IMessage;
+
+  if (content) message.content = content;
+
+  if (image)
+    message.image = await addFile(
+      `${channel}/${username}-${timestamp}`,
+      dataUriToBuffer(image),
+      "image/jpeg"
+    );
+
+  await addOrUpdateItem(channel, timestamp.toString(), message);
+
+  sendMessageInChannel(channel, message);
 
   return message;
 };
