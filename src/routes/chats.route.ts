@@ -20,9 +20,14 @@ router.get("/channels/:channel/messages", [
   chatsController.getMessages,
 ]);
 
-router.post("/send-message", [
+router.post("/channels/:channel/message", [
   validate(chatsValidations.sendMessage),
   chatsController.sendMessage,
+]);
+
+router.patch("/channels/:channel/message", [
+  validate(chatsValidations.editMessage),
+  chatsController.editMessage,
 ]);
 
 export default router;
