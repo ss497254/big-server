@@ -20,12 +20,12 @@ router.get("/channels/:channel/messages", [
   chatsController.getMessages,
 ]);
 
-router.post("/channels/:channel/message", [
+router.post("/channels/:channel/messages", [
   validate(chatsValidations.sendMessage),
   chatsController.sendMessage,
 ]);
 
-router.patch("/channels/:channel/message", [
+router.patch("/channels/:channel/messages", [
   validate(chatsValidations.editMessage),
   chatsController.editMessage,
 ]);
